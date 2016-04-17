@@ -1,0 +1,19 @@
+--- scratchbox2/preload/system.c	2016-04-17 21:34:21.887249919 +0300
++++ scratchbox2/preload/system.c	2016-04-17 21:36:13.040588061 +0300
+@@ -25,7 +25,15 @@
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+-#include <bits/libc-lock.h>
++#include <pthread.h>
++#define __libc_lock_t pthread_mutex_t
++#define __libc_lock_define_initialized(CLASS,NAME) \
++  CLASS __libc_lock_t NAME = PTHREAD_MUTEX_INITIALIZER;
++#define __libc_lock_lock(NAME) \
++  pthread_mutex_lock, (&(NAME))
++#define __libc_lock_unlock(NAME) \
++  pthread_mutex_unlock, (&(NAME))
++
+ #if 0
+ #include <sysdep-cancel.h>
+ #endif

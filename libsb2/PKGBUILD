@@ -1,0 +1,25 @@
+# Maintainer: Nikita Zhukov <yacuken@gmail.com>
+pkgname=libsb2
+pkgver=2.2.4
+pkgrel=1
+pkgdesc='Scratchbox2 libraries'
+arch=('i686' 'x86_64')
+url='http://maemo.gitorious.org/scratchbox2'
+license=('LGPL2')
+_arch=i386
+[ "$CARCH" = 'x86_64' ] && _arch=amd64
+_deb=${pkgname}_${pkgver}-1debian1_${_arch}.deb
+source=(http://ftp.debian.org/debian/pool/main/s/scratchbox2/${_deb})
+sha1sums=('2fe2ef4e6e27d482b8739af695418d67e489b7e0')
+[ "$CARCH" = 'x86_64' ] && sha1sums=('7007c89cd5360254b21b628d9c33c7013d650fd6')
+
+prepare() {
+    cd ${srcdir}
+    ar p ${_deb} data.tar.gz | bsdtar xf -
+}
+
+package() {
+    cd ${pkgdir}
+    install -d -m 0755 ${pkgdir}/usr
+    cp -rv ${srcdir}/usr/* ${pkgdir}/usr
+}

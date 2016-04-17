@@ -1,0 +1,26 @@
+# Maintainer: Nikita Zhukov <yacuken@gmail.com>
+pkgname=scratchbox2
+pkgver=2.2.4
+pkgrel=1
+pkgdesc='Transparent cross compiling environment'
+arch=('i686' 'x86_64')
+url='http://maemo.gitorious.org/scratchbox2'
+license=('LGPL2')
+depends=('libsb2')
+_arch=i386
+[ "$CARCH" = 'x86_64' ] && _arch=amd64
+_deb=${pkgname}_${pkgver}-1debian1_${_arch}.deb
+source=(http://ftp.debian.org/debian/pool/main/s/scratchbox2/${_deb})
+sha1sums=('203e13baa6856b97ac2a3aee403cfc6e7c376771')
+[ "$CARCH" = 'x86_64' ] && sha1sums=('458f47cc441cefdff406affcb46ed373765951ef')
+
+prepare() {
+    cd ${srcdir}
+    ar p ${_deb} data.tar.gz | bsdtar xf -
+}
+
+package() {
+    cd ${pkgdir}
+    install -d -m 0755 ${pkgdir}/usr
+    cp -rv ${srcdir}/usr/* ${pkgdir}/usr
+}
